@@ -20,6 +20,16 @@ module.exports = {
         use: 'ts-loader',
       },
       {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+          },
+        },
+      },
+      {
         test: /\.scss$/,
         exclude: /node_modules/,
         use: [
@@ -36,7 +46,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './src/index.html', // Update this if your template is located elsewhere
     }),
     new MiniCssExtractPlugin({
       filename: isProduction ? '[name].[contenthash].css' : '[name].css',
