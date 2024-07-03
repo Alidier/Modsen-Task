@@ -1,6 +1,6 @@
-// src/pages/DetailsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Book {
   id: string;
@@ -8,9 +8,14 @@ interface Book {
     title: string;
     authors?: string[];
     categories?: string[];
-    description?: string[];
+    description?: string;
     imageLinks?: {
-      thumbnail: string;
+      smallThumbnail?: string;
+      thumbnail?: string;
+      small?: string;
+      medium?: string;
+      large?: string;
+      extraLarge?: string;
     };
   };
 }
@@ -28,16 +33,17 @@ const Details: React.FC<DetailsPageProps> = ({
   category,
   sort,
   isClicked,
-  setIsClicked,
+  setIsClicked
 }) => {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (isClicked) {
+    if (id) {
       searchBook();
     }
-  }, [isClicked, query, category, sort]);
+  }, [id]);
 
   const searchBook = async () => {
     try {
@@ -54,18 +60,26 @@ const Details: React.FC<DetailsPageProps> = ({
     }
   };
 
+  const truncateDescription = (description: string, maxLength: number) => {
+    if (description.length > maxLength) {
+      return description.slice(0, maxLength) + '...';
+    }
+    return description;
+  };
+
   return (
     <div>
-      <h2>Details Page</h2>
       {book && (
-        <div className="book__card" key={book.id}>
-          <div className="book__thumbnail">
-            {book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && (
+        <div className="book__details__card" key={book.id}>
+          <div className="book__details__thumbnail">
+            <div className="img__container">
+            {book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.medium && (
               <img
-                src={book.volumeInfo.imageLinks.thumbnail}
+                src={book.volumeInfo.imageLinks.medium}
                 alt={book.volumeInfo.title}
               />
             )}
+            </div>
           </div>
           <div className="book__info">
             <p className="category">
@@ -79,14 +93,18 @@ const Details: React.FC<DetailsPageProps> = ({
                 ? book.volumeInfo.authors.join(', ')
                 : 'Unknown'}
             </p>
-            <p className='description'>
-               {book.volumeInfo.description
-               ? book.volumeInfo.description
-               : 'There is no description for this book'}
-            </p>
+            <div
+              className="description"
+              dangerouslySetInnerHTML={{
+                __html: book.volumeInfo.description
+                  ? truncateDescription(book.volumeInfo.description, 50)
+                  : 'There is no description for this book'
+              }}
+            />
           </div>
         </div>
       )}
+      <button onClick={() => navigate('/')}>Back to Home</button>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface Book {
   id: string;
@@ -8,7 +8,12 @@ interface Book {
     authors?: string[];
     categories?: string[];
     imageLinks?: {
-      thumbnail: string;
+      smallThumbnail?: string;
+      thumbnail?: string;
+      small?: string;
+      medium?: string;
+      large?: string;
+      extraLarge?: string;
     };
   };
 }
@@ -22,6 +27,7 @@ interface HomePageProps {
   setSort: (sort: string) => void;
   isClicked: boolean;
   setIsClicked: (isClicked: boolean) => void;
+  handleSearch: () => void;
 }
 
 const HomePage: React.FC<HomePageProps> = ({
@@ -33,11 +39,13 @@ const HomePage: React.FC<HomePageProps> = ({
   setSort,
   isClicked,
   setIsClicked,
+  handleSearch,
 }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [totalBooks, setTotalBooks] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 30;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isClicked) {
@@ -57,60 +65,71 @@ const HomePage: React.FC<HomePageProps> = ({
       const response = await fetch(url);
       const data = await response.json();
       if (data.items) {
-        setBooks((prevBooks) => (reset ? data.items : [...prevBooks, ...data.items]));
+        const uniqueBooks = removeDuplicates(data.items);
+        setBooks((prevBooks) => (reset ? uniqueBooks : [...prevBooks, ...uniqueBooks]));
         setTotalBooks(data.totalItems || 0);
+        setCurrentPage(reset ? 2 : currentPage + 1);
+        setIsClicked(false);
       } else {
         setBooks([]);
         setTotalBooks(0);
+        setIsClicked(false);
       }
     } catch (error) {
       console.log('Error fetching books', error);
+      setIsClicked(false);
     }
   };
 
+  const removeDuplicates = (newBooks: Book[]) => {
+    const ids = new Set<string>();
+    const uniqueBooks: Book[] = [];
+    newBooks.forEach((book) => {
+      if (!ids.has(book.id)) {
+        ids.add(book.id);
+        uniqueBooks.push(book);
+      }
+    });
+    return uniqueBooks;
+  };
+
   const handleLoadMore = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
     searchBooks();
+  };
+
+  const handleCardClick = (bookId: string) => {
+    navigate(`/details/${bookId}`);
   };
 
   return (
     <div>
       <div className="result__container">
-        <div className={isClicked ? 'total__books__container' : 'hidden'}>
+        <div className={isClicked || books.length > 0 ? 'total__books__container' : 'hidden'}>
           <p className="total__books">{`Found ${totalBooks} results`}</p>
         </div>
         <div className="book__cards__container">
           {books.map((book) => (
-            <div className="book__card" key={book.id}>
+            <div className="book__card" key={book.id} onClick={() => handleCardClick(book.id)} style={{ cursor: 'pointer' }}>
               <div className="book__thumbnail">
                 {book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && (
-                  <img
-                    src={book.volumeInfo.imageLinks.thumbnail}
-                    alt={book.volumeInfo.title}
-                  />
+                  <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
                 )}
               </div>
               <div className="book__info">
                 <p className="category">
-                  {book.volumeInfo.categories
-                    ? book.volumeInfo.categories.join(', ')
-                    : 'All'}
+                  {book.volumeInfo.categories ? book.volumeInfo.categories.join(', ') : 'All'}
                 </p>
                 <h2 className="title">{book.volumeInfo.title}</h2>
                 <p className="author">
-                  {book.volumeInfo.authors
-                    ? book.volumeInfo.authors.join(', ')
-                    : 'Unknown'}
+                  {book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown'}
                 </p>
-                <Link to={`/details/${book.id}`}> More Details </Link>
+                <Link to={`/details/${book.id}`}>More Details</Link>
               </div>
             </div>
           ))}
         </div>
-        <div className={isClicked ? 'load__more__container' : 'hidden'}>
-          <button className="load__more" onClick={handleLoadMore}>
-            Load More
-          </button>
+        <div className={books.length > 0 && books.length < totalBooks ? 'load__more__container' : 'hidden'}>
+          <button className="load__more" onClick={handleLoadMore}>Load More</button>
         </div>
       </div>
     </div>

@@ -213,3 +213,69 @@ body {
   height: 30px;
   color: gray;
 }
+.description {
+  resize: none;
+  width: 400px;
+}
+.book__details__card {
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  border: '1px solid #ddd';
+  border-radius: 5px;
+
+  width: '400px';
+  margin: '20px auto';
+  justify-content: space-around;
+   .book__details__thumbnail {
+    width: 600px;
+    height: 400px;
+    margin-right: 20px;
+    background-color: #f9f9f9;
+   
+   }
+}
+.img__container {
+  width: 300px;
+  height: 200px;
+  margin-top: 50px;
+  margin-left: 100px;
+  img {
+    object-fit: cover;
+    width: 400px;
+    height: 100%
+ }
+}
+.book__info {
+  display: flex;
+  flex-direction: column;
+  height: 50%;
+  background-color: #fff;
+  justify-content: flex-start;
+  align-items: flex-start;
+   .category {
+    font-size: 14px;
+    color: gray;
+    text-decoration: none;
+   }
+   .title {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 10px 0;
+   }
+   .author {
+    font-size: 16px;
+    color: #555;
+    text-decoration: underline;
+    color: #888;
+   }
+   .description {
+    margin-top: 20px;
+    margin-left: 0px;
+    font-size: 14px;
+    color: #666;
+    border: 1px solid gray;
+    width: 600px;
+    height: 150px;
+   }
+}

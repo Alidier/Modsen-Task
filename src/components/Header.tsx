@@ -1,4 +1,3 @@
-// src/components/Header.tsx
 import React from 'react';
 import Filter from './Filter';
 
@@ -23,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <header>
-      <div className="header__wrap">
+      <div className='header__wrap'>
         <div className="search__wrap">
           <div className="search__bar">
             <div className="h1__container">
@@ -38,10 +37,8 @@ const Header: React.FC<HeaderProps> = ({
                 placeholder="Enter search query"
               />
               <button
-                className="searchButton"
-                onClick={() => {
-                  handleSearch();
-                }}
+                className='searchButton'
+                onClick={handleSearch}
                 disabled={query.trim() === ''}
               >
               </button>
