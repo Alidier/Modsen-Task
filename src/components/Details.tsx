@@ -1,24 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-
-interface Book {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    categories?: string[];
-    description?: string;
-    imageLinks?: {
-      smallThumbnail?: string;
-      thumbnail?: string;
-      small?: string;
-      medium?: string;
-      large?: string;
-      extraLarge?: string;
-    };
-  };
-}
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Book } from '../types/Book';
 
 interface DetailsPageProps {
   query: string;
@@ -45,9 +27,9 @@ const Details: React.FC<DetailsPageProps> = ({
     }
   }, [id]);
 
-  const searchBook = async () => {
+  const searchBook = useCallback(async () => {
     try {
-      let url = `https://www.googleapis.com/books/v1/volumes/${id}`;
+      const url = `https://www.googleapis.com/books/v1/volumes/${id}`;
       const response = await fetch(url);
       const data = await response.json();
       if (data.id) {
@@ -58,14 +40,18 @@ const Details: React.FC<DetailsPageProps> = ({
     } catch (error) {
       console.log('Error fetching book details', error);
     }
-  };
+  }, [id]);
 
-  const truncateDescription = (description: string, maxLength: number) => {
+  const handleBackToHome = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
+  const truncateDescription = useCallback((description: string, maxLength: number) => {
     if (description.length > maxLength) {
       return description.slice(0, maxLength) + '...';
     }
     return description;
-  };
+  }, []);
 
   return (
     <div>
@@ -73,12 +59,12 @@ const Details: React.FC<DetailsPageProps> = ({
         <div className="book__details__card" key={book.id}>
           <div className="book__details__thumbnail">
             <div className="img__container">
-            {book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.medium && (
-              <img
-                src={book.volumeInfo.imageLinks.medium}
-                alt={book.volumeInfo.title}
-              />
-            )}
+              {book.volumeInfo.imageLinks?.medium && (
+                <img
+                  src={book.volumeInfo.imageLinks.medium}
+                  alt={book.volumeInfo.title}
+                />
+              )}
             </div>
           </div>
           <div className="book__info">
@@ -104,7 +90,7 @@ const Details: React.FC<DetailsPageProps> = ({
           </div>
         </div>
       )}
-      <button onClick={() => navigate('/')}>Back to Home</button>
+      <button onClick={handleBackToHome}>Back to Home</button>
     </div>
   );
 };

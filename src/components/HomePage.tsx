@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-interface Book {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    categories?: string[];
-    imageLinks?: {
-      smallThumbnail?: string;
-      thumbnail?: string;
-      small?: string;
-      medium?: string;
-      large?: string;
-      extraLarge?: string;
-    };
-  };
-}
+import { Book } from '../types/Book';
+import { GOOGLE_BOOKS_API_URL } from '../constants/api';
 
 interface HomePageProps {
   query: string;
@@ -55,7 +40,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
   const searchBooks = async (reset = false) => {
     try {
-      let url = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
+      let url = `${GOOGLE_BOOKS_API_URL}?q=${query}`;
       if (category !== 'all') {
         url += `+subject:${category}`;
       }
