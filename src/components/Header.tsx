@@ -22,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <header>
-      <div className='header__wrap'>
+      <div className="header__wrap">
         <div className="search__wrap">
           <div className="search__bar">
             <div className="h1__container">
@@ -37,11 +37,10 @@ const Header: React.FC<HeaderProps> = ({
                 placeholder="Enter search query"
               />
               <button
-                className='searchButton'
+                className="searchButton"
                 onClick={handleSearch}
                 disabled={query.trim() === ''}
-              >
-              </button>
+              ></button>
             </div>
           </div>
           <div className="filter__menu">

@@ -15,7 +15,7 @@ const Details: React.FC<DetailsPageProps> = ({
   category,
   sort,
   isClicked,
-  setIsClicked
+  setIsClicked,
 }) => {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
@@ -46,12 +46,15 @@ const Details: React.FC<DetailsPageProps> = ({
     navigate('/');
   }, [navigate]);
 
-  const truncateDescription = useCallback((description: string, maxLength: number) => {
-    if (description.length > maxLength) {
-      return description.slice(0, maxLength) + '...';
-    }
-    return description;
-  }, []);
+  const truncateDescription = useCallback(
+    (description: string, maxLength: number) => {
+      if (description.length > maxLength) {
+        return description.slice(0, maxLength) + '...';
+      }
+      return description;
+    },
+    []
+  );
 
   return (
     <div>
@@ -84,7 +87,7 @@ const Details: React.FC<DetailsPageProps> = ({
               dangerouslySetInnerHTML={{
                 __html: book.volumeInfo.description
                   ? truncateDescription(book.volumeInfo.description, 50)
-                  : 'There is no description for this book'
+                  : 'There is no description for this book',
               }}
             />
           </div>

@@ -6,7 +6,9 @@ interface BookData {
   // Другие возможные поля
 }
 
-export const processBookData = (data: BookData): { uniqueBooks: Book[], totalItems: number } => {
+export const processBookData = (
+  data: BookData
+): { uniqueBooks: Book[]; totalItems: number } => {
   const ids = new Set<string>();
   const uniqueBooks: Book[] = [];
 

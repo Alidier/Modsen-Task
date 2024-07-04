@@ -52,8 +52,10 @@ const HomePage: React.FC<HomePageProps> = ({
       const response = await fetch(url);
       const data = await response.json();
       const { uniqueBooks, totalItems } = processBookData(data);
-      
-      setBooks((prevBooks) => (reset ? uniqueBooks : [...prevBooks, ...uniqueBooks]));
+
+      setBooks((prevBooks) =>
+        reset ? uniqueBooks : [...prevBooks, ...uniqueBooks]
+      );
       setTotalBooks(totalItems);
       setCurrentPage(reset ? 2 : currentPage + 1);
       setIsClicked(false);
@@ -74,32 +76,57 @@ const HomePage: React.FC<HomePageProps> = ({
   return (
     <div>
       <div className="result__container">
-        <div className={isClicked || books.length > 0 ? 'total__books__container' : 'hidden'}>
+        <div
+          className={
+            isClicked || books.length > 0 ? 'total__books__container' : 'hidden'
+          }
+        >
           <p className="total__books">{`Found ${totalBooks} results`}</p>
         </div>
         <div className="book__cards__container">
           {books.map((book) => (
-            <div className="book__card" key={book.id} onClick={() => handleCardClick(book.id)} style={{ cursor: 'pointer' }}>
+            <div
+              className="book__card"
+              key={book.id}
+              onClick={() => handleCardClick(book.id)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="book__thumbnail">
-                {book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && (
-                  <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
-                )}
+                {book.volumeInfo.imageLinks &&
+                  book.volumeInfo.imageLinks.thumbnail && (
+                    <img
+                      src={book.volumeInfo.imageLinks.thumbnail}
+                      alt={book.volumeInfo.title}
+                    />
+                  )}
               </div>
               <div className="book__info">
                 <p className="category">
-                  {book.volumeInfo.categories ? book.volumeInfo.categories.join(', ') : 'All'}
+                  {book.volumeInfo.categories
+                    ? book.volumeInfo.categories.join(', ')
+                    : 'All'}
                 </p>
                 <h2 className="title">{book.volumeInfo.title}</h2>
                 <p className="author">
-                  {book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown'}
+                  {book.volumeInfo.authors
+                    ? book.volumeInfo.authors.join(', ')
+                    : 'Unknown'}
                 </p>
                 <Link to={`/details/${book.id}`}>More Details</Link>
               </div>
             </div>
           ))}
         </div>
-        <div className={books.length > 0 && books.length < totalBooks ? 'load__more__container' : 'hidden'}>
-          <button className="load__more" onClick={handleLoadMore}>Load More</button>
+        <div
+          className={
+            books.length > 0 && books.length < totalBooks
+              ? 'load__more__container'
+              : 'hidden'
+          }
+        >
+          <button className="load__more" onClick={handleLoadMore}>
+            Load More
+          </button>
         </div>
       </div>
     </div>
