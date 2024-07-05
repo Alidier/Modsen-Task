@@ -61,14 +61,12 @@ const Details: React.FC<DetailsPageProps> = ({
       {book && (
         <div className="book__details__card" key={book.id}>
           <div className="book__details__thumbnail">
-            <div className="img__container">
-              {book.volumeInfo.imageLinks?.medium && (
+              {book.volumeInfo.imageLinks?.thumbnail && (
                 <img
-                  src={book.volumeInfo.imageLinks.medium}
+                  src={book.volumeInfo.imageLinks.thumbnail}
                   alt={book.volumeInfo.title}
                 />
               )}
-            </div>
           </div>
           <div className="book__info">
             <p className="category">
@@ -91,9 +89,10 @@ const Details: React.FC<DetailsPageProps> = ({
               }}
             />
           </div>
+          <button className='buttonBack' onClick={handleBackToHome}>Back to Home</button>
         </div>
       )}
-      <button onClick={handleBackToHome}>Back to Home</button>
+      
     </div>
   );
 };

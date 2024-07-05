@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import HomePage from './HomePage';
-import DetailsPage from './Details';
+import HomePage from '../pages/HomePage';
+import DetailsPage from '../pages/Details';
 import Layout from './Layout';
 
 function App() {

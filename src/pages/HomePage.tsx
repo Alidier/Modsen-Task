@@ -112,7 +112,6 @@ const HomePage: React.FC<HomePageProps> = ({
                     ? book.volumeInfo.authors.join(', ')
                     : 'Unknown'}
                 </p>
-                <Link to={`/details/${book.id}`}>More Details</Link>
               </div>
             </div>
           ))}
