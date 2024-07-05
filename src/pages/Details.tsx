@@ -15,7 +15,7 @@ const Details: React.FC<DetailsPageProps> = ({
   category,
   sort,
   isClicked,
-  setIsClicked
+  setIsClicked,
 }) => {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
@@ -46,26 +46,27 @@ const Details: React.FC<DetailsPageProps> = ({
     navigate('/');
   }, [navigate]);
 
-  const truncateDescription = useCallback((description: string, maxLength: number) => {
-    if (description.length > maxLength) {
-      return description.slice(0, maxLength) + '...';
-    }
-    return description;
-  }, []);
+  const truncateDescription = useCallback(
+    (description: string, maxLength: number) => {
+      if (description.length > maxLength) {
+        return description.slice(0, maxLength) + '...';
+      }
+      return description;
+    },
+    []
+  );
 
   return (
     <div>
       {book && (
         <div className="book__details__card" key={book.id}>
           <div className="book__details__thumbnail">
-            <div className="img__container">
-              {book.volumeInfo.imageLinks?.medium && (
+              {book.volumeInfo.imageLinks?.thumbnail && (
                 <img
-                  src={book.volumeInfo.imageLinks.medium}
+                  src={book.volumeInfo.imageLinks.thumbnail}
                   alt={book.volumeInfo.title}
                 />
               )}
-            </div>
           </div>
           <div className="book__info">
             <p className="category">
@@ -84,13 +85,14 @@ const Details: React.FC<DetailsPageProps> = ({
               dangerouslySetInnerHTML={{
                 __html: book.volumeInfo.description
                   ? truncateDescription(book.volumeInfo.description, 50)
-                  : 'There is no description for this book'
+                  : 'There is no description for this book',
               }}
             />
           </div>
+          <button className='buttonBack' onClick={handleBackToHome}>Back to Home</button>
         </div>
       )}
-      <button onClick={handleBackToHome}>Back to Home</button>
+      
     </div>
   );
 };
